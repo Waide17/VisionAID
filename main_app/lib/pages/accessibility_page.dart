@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:main_app/pages/accessibilityProvider.dart';
+import 'package:main_app/pages/accessibility_provider.dart';
 
 class AccessibilityPage extends StatelessWidget {
   const AccessibilityPage({super.key});
@@ -87,6 +87,9 @@ class AccessibilityPage extends StatelessWidget {
                   onChanged: (value) {
                     accessibilityProvider.setTextSize(value);
                     accessibilityProvider.triggerHapticFeedback();
+                    accessibilityProvider.speak(
+                      'Dimensione testo ${value.round()}',
+                    );
                   },
                   activeColor: accessibilityProvider.highContrast
                       ? Colors.black
@@ -155,6 +158,9 @@ class AccessibilityPage extends StatelessWidget {
       value: accessibilityProvider.hapticFeedback,
       onChanged: (value) {
         accessibilityProvider.setHapticFeedback(value);
+        accessibilityProvider.speak(
+          value ? 'Feedback tattile attivato' : 'Feedback tattile disattivato',
+        );
       },
     );
   }

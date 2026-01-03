@@ -38,7 +38,10 @@ class AccessibilityProvider extends ChangeNotifier {
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.black),
           bodyMedium: TextStyle(color: Colors.black),
-          titleLarge: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          titleLarge: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         cardTheme: CardThemeData(
           color: Colors.white,
@@ -77,9 +80,7 @@ class AccessibilityProvider extends ChangeNotifier {
       cardTheme: CardThemeData(
         color: Colors.grey[100],
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -115,12 +116,12 @@ class AccessibilityProvider extends ChangeNotifier {
     _voiceGuidance = value;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_voiceGuidanceKey, value);
-    
+
     if (value) {
       // Annuncia l'attivazione della guida vocale
       _speak('Guida vocale attivata');
     }
-    
+
     notifyListeners();
   }
 
@@ -129,11 +130,11 @@ class AccessibilityProvider extends ChangeNotifier {
     _hapticFeedback = value;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_hapticFeedbackKey, value);
-    
+
     if (value) {
       HapticFeedback.mediumImpact();
     }
-    
+
     notifyListeners();
   }
 
@@ -152,20 +153,18 @@ class AccessibilityProvider extends ChangeNotifier {
   }
 
   final FlutterTts _flutterTts = FlutterTts();
-  
+  Future<void> _speak(String message) async {
+    await _flutterTts.speak(message);
+  }
+
   AccessibilityProvider() {
     _initTts();
   }
 
   Future<void> _initTts() async {
     await _flutterTts.setLanguage('it-IT');
-    await _flutterTts.setSpeechRate(0.5);
+    await _flutterTts.setSpeechRate(0.8);
     await _flutterTts.setVolume(1.0);
     await _flutterTts.setPitch(1.0);
-  }
-
-  Future<void> _speak(String message) async {
-    debugPrint('TTS: $message');
-    await _flutterTts.speak(message);
   }
 }

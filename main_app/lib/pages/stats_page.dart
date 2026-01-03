@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:main_app/pages/statsBox.dart';
+import 'package:main_app/pages/stats_box.dart';
 import 'package:provider/provider.dart';
-import 'package:main_app/pages/accessibilityProvider.dart';
+import 'package:main_app/pages/accessibility_provider.dart';
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
@@ -33,7 +33,7 @@ class StatsPage extends StatelessWidget {
               icon: Icons.timer,
               onTap: () {
                 accessibilityProvider.triggerHapticFeedback();
-                accessibilityProvider.speak('Tempo di utilizzo totale: 0 min');
+                accessibilityProvider.speak('Tempo di utilizzo totale: ${StatBox.value} minuti');
               },
             ),
 

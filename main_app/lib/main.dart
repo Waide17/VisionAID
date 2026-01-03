@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:main_app/pages/detectPage.dart';
-import 'package:main_app/pages/statsPage.dart';
-import 'package:main_app/pages/accessibilityPage.dart';
+import 'package:main_app/pages/detect_page.dart';
+import 'package:main_app/pages/stats_page.dart';
+import 'package:main_app/pages/accessibility_page.dart';
 import 'package:provider/provider.dart';
-import 'package:main_app/pages/accessibilityProvider.dart';
+import 'package:main_app/pages/accessibility_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
