@@ -10,7 +10,7 @@ class StatBox extends StatelessWidget {
     required this.title,
     required this.value,
     required this.unit,
-    required this.icon,
+    required this.icon, required Null Function() onTap,
   });
 
   @override
