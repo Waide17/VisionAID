@@ -19,32 +19,23 @@ Both components perform on-device image processing, ensuring:
 
 ## Features
 
-<table>
-  <tr>
-    <td width="60" style="border: none;"><img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/EyeGrey.svg" width="40"></td>
-    <td style="border: none;">
-      <strong>Real-time detection of moving objects</strong>
-    </td>
-  </tr>
-  <tr>
-    <td width="60" style="border: none;"><img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/UnmuteGrey.svg" width="40"></td>
-    <td style="border: none;">
-      <strong>Audio feedback</strong>
-    </td>
-  </tr>
-  <tr>
-    <td width="60" style="border: none;"><img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/DeviceMobileGrey.svg" width="40"></td>
-    <td style="border: none;">
-      <strong>Haptic alerts for non-visual warnings</strong>
-    </td>
-  </tr>
-  <tr>
-    <td width="60" style="border: none;"><img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/PlugGrey.svg" width="40"></td>
-    <td style="border: none;">
-      <strong>Integration with a dedicated device</strong>
-    </td>
-  </tr>
-</table>
+<div>
+  <img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/EyeGrey.svg" width="40" align="left" style="margin-right: 10px;">
+  <strong>Real-time detection of moving objects</strong>
+  <br clear="left"><br>
+  
+  <img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/UnmuteGrey.svg" width="40" align="left" style="margin-right: 10px;">
+  <strong>Audio feedback</strong>
+  <br clear="left"><br>
+  
+  <img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/DeviceMobileGrey.svg" width="40" align="left" style="margin-right: 10px;">
+  <strong>Haptic alerts for non-visual warnings</strong>
+  <br clear="left"><br>
+  
+  <img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/PlugGrey.svg" width="40" align="left" style="margin-right: 10px;">
+  <strong>Integration with a dedicated device</strong>
+  <br clear="left">
+</div>
 
 
 ## Target Users <img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/People.svg">
