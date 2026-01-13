@@ -20,19 +20,19 @@ Both components perform on-device image processing, ensuring:
 ## Features
 
 <div>
-  <img src="https://img.icons8.com/ios-glyphs/30/ffffff/visible.png" width="40" align="left" style="margin-right: 10px;">
+  <img src="https://img.icons8.com/?size=100&id=85130&format=png&color=FFFFFF" width="40" align="left" style="margin-right: 10px;">
   <strong>Real-time detection of moving objects</strong>
   <br clear="left"><br>
   
-  <img src="https://img.icons8.com/ios-glyphs/30/ffffff/sound.png" width="40" align="left" style="margin-right: 10px;">
+  <img src="https://img.icons8.com/?size=100&id=u71c5DzHOJIu&format=png&color=FFFFFF" width="40" align="left" style="margin-right: 10px;">
   <strong>Audio feedback</strong>
   <br clear="left"><br>
   
-  <img src="https://img.icons8.com/ios-glyphs/30/ffffff/vibration.png" width="40" align="left" style="margin-right: 10px;">
+  <img src="https://img.icons8.com/?size=100&id=NBoBuG0ipVkb&format=png&color=FFFFFF" width="40" align="left" style="margin-right: 10px;">
   <strong>Haptic alerts for non-visual warnings</strong>
   <br clear="left"><br>
   
-  <img src="https://img.icons8.com/ios-glyphs/30/ffffff/connected.png" width="40" align="left" style="margin-right: 10px;">
+  <img src="https://img.icons8.com/?size=100&id=owYMDvr3uDiM&format=png&color=FFFFFF" width="40" align="left" style="margin-right: 10px;">
   <strong>Integration with a dedicated device</strong>
   <br clear="left">
 </div>
@@ -42,8 +42,26 @@ Both components perform on-device image processing, ensuring:
 Our project is designed for:
 - Blind users
 - People with partial or sever visual impairments
+
 ## Technologies
-![My Skills](https://skillicons.dev/icons?i=kotlin,swift,flutter,tensorflow)
+<div>
+  
+  ![Flutter](https://skillicons.dev/icons?i=flutter)
+  <strong>Used for the front-end of the app</strong>
+  <br clear="left"><br>
+  
+  ![Kotlin](https://skillicons.dev/icons?i=kotlin)
+  <strong>Used for Android development together with Flutter</strong>
+  <br clear="left"><br>
+  
+  ![Swift](https://skillicons.dev/icons?i=swift)
+  <strong>Used for iOS development together with Flutter</strong>
+  <br clear="left"><br>
+  
+  ![TensorFlow](https://skillicons.dev/icons?i=tensorflow)
+  <strong>AI Model used for object recognition</strong>
+  <br clear="left">
+</div>
 
 
 
