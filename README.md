@@ -19,32 +19,32 @@ Both components perform on-device image processing, ensuring:
 
 ## Features
 
-  <table>
-    <tr>
-      <td width="100"><img src="[https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/People.svg](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/ApprovedChangesGrey.svg)" width="80"></td>
-      <td>
-        <strong>Real-time detection of moving objects</strong>
-      </td>
-    </tr>
-    <tr>
-      <td width="100"><img src="[https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/People.svg](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/ApprovedChangesGrey.svg)" width="80"></td>
-      <td>
-        <strong>Audio feedback</strong>
-      </td>
-    </tr>
-    <tr>
-      <td width="100"><img src="[https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/People.svg](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/ApprovedChangesGrey.svg)" width="80"></td>
-      <td>
-        <strong>Hapric alerts for non-visual warnings</strong>
-      </td>
-    </tr>
-        <tr>
-      <td width="100"><img src="[https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/People.svg](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/ApprovedChangesGrey.svg)" width="80"></td>
-      <td>
-        <strong>Integration with a dedicated device</strong>
-      </td>
-    </tr>
-  </table>
+<table>
+  <tr>
+    <td width="60" style="border: none;"><img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/EyeGrey.svg" width="40"></td>
+    <td style="border: none;">
+      <strong>Real-time detection of moving objects</strong>
+    </td>
+  </tr>
+  <tr>
+    <td width="60" style="border: none;"><img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/UnmuteGrey.svg" width="40"></td>
+    <td style="border: none;">
+      <strong>Audio feedback</strong>
+    </td>
+  </tr>
+  <tr>
+    <td width="60" style="border: none;"><img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/DeviceMobileGrey.svg" width="40"></td>
+    <td style="border: none;">
+      <strong>Haptic alerts for non-visual warnings</strong>
+    </td>
+  </tr>
+  <tr>
+    <td width="60" style="border: none;"><img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/PlugGrey.svg" width="40"></td>
+    <td style="border: none;">
+      <strong>Integration with a dedicated device</strong>
+    </td>
+  </tr>
+</table>
 
 
 ## Target Users <img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/People.svg">
