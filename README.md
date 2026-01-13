@@ -24,12 +24,14 @@ Both components perform on-device image processing, ensuring:
 - Integration with a dedicated device
 
 
-## Target Users
+## Target Users <img src="https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/People.svg">
 Our project is designed for:
 - Blind users
 - People with partial or sever visual impairments
 ## Technologies
 ![My Skills](https://skillicons.dev/icons?i=kotlin,swift,flutter,tensorflow)
+
+
 
 ## Project Status
 The project is currently under development.
