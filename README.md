@@ -20,19 +20,19 @@ Both components perform on-device image processing, ensuring:
 ## Features
 
 <div>
-  <img src="https://raw.githubusercontent.com/primer/octicons/main/icons/eye-24.svg" width="40" align="left" style="margin-right: 10px;">
+  <img src="https://raw.githubusercontent.com/primer/octicons/main/icons/eye-24.svg" width="40" align="left" style="margin-right: 10px; filter: invert(1)">
   <strong>Real-time detection of moving objects</strong>
   <br clear="left"><br>
   
-  <img src="https://raw.githubusercontent.com/primer/octicons/main/icons/unmute-24.svg" width="40" align="left" style="margin-right: 10px;">
+  <img src="https://raw.githubusercontent.com/primer/octicons/main/icons/unmute-24.svg" width="40" align="left" style="margin-right: 10px; filter: invert(1)">
   <strong>Audio feedback</strong>
   <br clear="left"><br>
   
-  <img src="https://raw.githubusercontent.com/primer/octicons/main/icons/device-mobile-24.svg" width="40" align="left" style="margin-right: 10px;">
+  <img src="https://raw.githubusercontent.com/primer/octicons/main/icons/device-mobile-24.svg" width="40" align="left" style="margin-right: 10px; filter: invert(1)">
   <strong>Haptic alerts for non-visual warnings</strong>
   <br clear="left"><br>
   
-  <img src="https://raw.githubusercontent.com/primer/octicons/main/icons/plug-24.svg" width="40" align="left" style="margin-right: 10px;">
+  <img src="https://raw.githubusercontent.com/primer/octicons/main/icons/plug-24.svg" width="40" align="left" style="margin-right: 10px; filter: invert(1)">
   <strong>Integration with a dedicated device</strong>
   <br clear="left">
 </div>
