@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:main_app/pages/detect_page.dart';
-import 'package:main_app/pages/stats_page.dart';
 import 'package:main_app/pages/accessibility_page.dart';
+import 'package:main_app/pages/profile_page.dart';
 import 'package:provider/provider.dart';
 import 'package:main_app/pages/accessibility_provider.dart';
 
@@ -15,7 +15,7 @@ void main() async {
 
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,  // attiva solo in debug
+      enabled: !kReleaseMode,
       builder: (context) => ChangeNotifierProvider.value(
         value: accessibilityProvider,
         child: const MyApp(),
@@ -61,8 +61,8 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = const [
     DetectPage(),
-    StatsPage(),
     AccessibilityPage(),
+    ProfilePage(),
   ];
 
   @override
@@ -80,7 +80,7 @@ class _MainPageState extends State<MainPage> {
           accessibilityProvider.triggerHapticFeedback();
 
 
-          final pageNames = ['Detect', 'Statistiche', 'Accessibilità'];
+          final pageNames = ['Detect', 'Accessibilità', 'Profilo'];
           accessibilityProvider.speak('Pagina ${pageNames[index]}');
         },
 
@@ -94,13 +94,7 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(
               Icons.visibility,
             ),
-            label: 'Detect',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.bar_chart,
-            ),
-            label: 'Statistiche',
+            label: 'Camera',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -108,6 +102,13 @@ class _MainPageState extends State<MainPage> {
               color: accessibilityProvider.highContrast ? Colors.white : null
             ),
             label: 'Accessibilità',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+              color: accessibilityProvider.highContrast ? Colors.white : null
+            ),
+            label: 'Profilo',
           ),
         ],
       ),
@@ -131,13 +132,13 @@ Widget detect(BuildContext context) {
 @override
 Widget stats(BuildContext context) {
   return MaterialApp(
-    title: 'Stats Page',
+    title: 'Accessibility Page',
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       useMaterial3: true,
     ),
-    home: const StatsPage(),
+    home: const AccessibilityPage(),
   );
 }
 
