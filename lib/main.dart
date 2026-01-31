@@ -57,7 +57,7 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
   late CameraController _cameraController;
   bool _isCameraInitialized = false;
 
-  // ==================== YOLO MODEL ====================
+  // ==================== OBJECT DETECTION MODEL ====================
   Interpreter? _interpreter;
   List<String> _labels = [];
   bool _isModelLoaded = false;
@@ -74,18 +74,14 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
   DateTime _lastFpsUpdate = DateTime.now();
   double _currentFps = 0.0;
 
-  // ==================== CONFIGURAZIONE YOLO ====================
-  // YOLOv5n utilizza immagini di input 640x640 pixel
-  static const int inputImageSize = 640;
+  // ==================== CONFIGURAZIONE MODEL ====================
+  // EfficientDet-Lite0 utilizza immagini di input 320x320 pixel
+  static const int inputImageSize = 320;
   
   // Soglia di confidenza minima per considerare una detection valida
   // Valori più alti = meno falsi positivi ma possibili oggetti mancati
   // Valori più bassi = rileva di più ma con più falsi allarmi
   static const double confidenceThreshold = 0.5;
-  
-  // Soglia IoU (Intersection over Union) per Non-Maximum Suppression
-  // Rimuove detection duplicate dello stesso oggetto
-  static const double iouThreshold = 0.45;
   
   // Numero di frame da saltare per ottimizzare le performance
   // frameSkip=2 significa: processa 1 frame, salta 2, processa 1, ecc.
@@ -107,7 +103,7 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
   void initState() {
     super.initState();
     _initializeTextToSpeech();
-    _loadYoloModel();
+    _loadModel();
     
     if (cameras.isNotEmpty) {
       _initializeCamera();
@@ -129,10 +125,10 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
     }
   }
 
-  /// Carica il modello YOLOv5n TFLite e le etichette delle classi
-  Future<void> _loadYoloModel() async {
+  /// Carica il modello TFLite e le etichette delle classi
+  Future<void> _loadModel() async {
     try {
-      debugPrint('🔄 Caricamento modello YOLOv5n...');
+      debugPrint('🔄 Caricamento modello object detection...');
 
       // Carica le etichette delle classi COCO (80 classi totali)
       final labelsData = await rootBundle.loadString('assets/labelmap.txt');
@@ -140,10 +136,9 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
 
       // Configura l'interprete TFLite con ottimizzazioni
       final interpreterOptions = InterpreterOptions()
-        ..threads = 4  // Usa 4 thread per il processing parallelo
-        ..useNnApiForAndroid = true;  // Usa accelerazione hardware su Android
+        ..threads = 4;  // Usa 4 thread per il processing parallelo
 
-      // Carica il modello YOLOv5n dal file assets
+      // Carica il modello TFLite dal file assets
       _interpreter = await Interpreter.fromAsset(
         'assets/yolov5n.tflite',
         options: interpreterOptions,
@@ -154,9 +149,12 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
       });
 
       // Stampa informazioni sul modello per debug
-      debugPrint('✅ Modello YOLOv5n caricato con successo!');
+      debugPrint('✅ Modello caricato con successo!');
       debugPrint('   📊 Input shape: ${_interpreter!.getInputTensor(0).shape}');
-      debugPrint('   📊 Output shape: ${_interpreter!.getOutputTensor(0).shape}');
+      debugPrint('   📊 Output 0 shape: ${_interpreter!.getOutputTensor(0).shape}');
+      debugPrint('   📊 Output 1 shape: ${_interpreter!.getOutputTensor(1).shape}');
+      debugPrint('   📊 Output 2 shape: ${_interpreter!.getOutputTensor(2).shape}');
+      debugPrint('   📊 Output 3 shape: ${_interpreter!.getOutputTensor(3).shape}');
       debugPrint('   🏷️  Etichette caricate: ${_labels.length}');
       debugPrint('   ⚠️  Classi di pericolo monitorate: ${_dangerClassIds.length}');
       
@@ -221,20 +219,35 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
       // STEP 1: Preprocessa l'immagine (ridimensiona e normalizza)
       final inputTensor = _preprocessImage(cameraImage);
 
-      // STEP 2: Prepara il tensor di output
-      // YOLOv5 output shape: [1, 25200, 85]
-      // 25200 = numero di anchor boxes
-      // 85 = [x, y, w, h, objectness, 80 class probabilities]
-      var outputTensor = List.filled(1 * 25200 * 85, 0.0).reshape([1, 25200, 85]);
+      // STEP 2: Prepara i tensor di output
+      // EfficientDet ha 4 output separati:
+      // - Output 0: locations [1, 25, 4] - coordinate bounding box
+      // - Output 1: classes [1, 25] - ID delle classi
+      // - Output 2: scores [1, 25] - punteggi di confidenza
+      // - Output 3: count [1] - numero di detection valide
+      var outputLocations = List.filled(1 * 25 * 4, 0.0).reshape([1, 25, 4]);
+      var outputClasses = List.filled(1 * 25, 0.0).reshape([1, 25]);
+      var outputScores = List.filled(1 * 25, 0.0).reshape([1, 25]);
+      var outputCount = List.filled(1, 0.0).reshape([1]);
 
-      // STEP 3: Esegui l'inferenza del modello YOLO
-      _interpreter!.run(
-        inputTensor.reshape([1, inputImageSize, inputImageSize, 3]),
-        outputTensor
+      // STEP 3: Esegui l'inferenza del modello
+      _interpreter!.runForMultipleInputs(
+        [inputTensor.reshape([1, inputImageSize, inputImageSize, 3])],
+        {
+          0: outputLocations,
+          1: outputClasses,
+          2: outputScores,
+          3: outputCount,
+        },
       );
 
-      // STEP 4: Post-processa i risultati (applica NMS e filtra per confidenza)
-      final detections = _postProcessYoloOutput(outputTensor[0]);
+      // STEP 4: Post-processa i risultati
+      final detections = _postProcessDetections([
+        outputLocations,
+        outputClasses,
+        outputScores,
+        outputCount,
+      ]);
 
       // STEP 5: Calcola FPS per monitoraggio performance
       final processingTime = DateTime.now().difference(processingStartTime).inMilliseconds;
@@ -275,13 +288,13 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
     _isProcessing = false;
   }
 
-  /// Preprocessa l'immagine dalla camera per l'input di YOLO
-  /// Converte da YUV420 a RGB, ridimensiona a 640x640 e normalizza
+  /// Preprocessa l'immagine dalla camera per l'input del modello
+  /// Converte da YUV420 a RGB, ridimensiona e normalizza
   Float32List _preprocessImage(CameraImage cameraImage) {
     // STEP 1: Converti da YUV420 (formato camera) a RGB
     final img.Image rgbImage = _convertYUV420ToRGB(cameraImage);
 
-    // STEP 2: Ridimensiona a 640x640 (dimensione richiesta da YOLOv5)
+    // STEP 2: Ridimensiona all'input size del modello
     final img.Image resizedImage = img.copyResize(
       rgbImage,
       width: inputImageSize,
@@ -351,130 +364,74 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
     return rgbImage;
   }
 
-  /// Post-processa l'output di YOLOv5 per estrarre le detection valide
-  /// Applica confidence threshold e Non-Maximum Suppression (NMS)
-  List<Detection> _postProcessYoloOutput(List<dynamic> yoloOutput) {
-    List<Detection> candidateDetections = [];
+  /// Post-processa l'output del modello per estrarre le detection valide
+  /// Filtra per confidenza e classi di pericolo
+  List<Detection> _postProcessDetections(List<dynamic> outputData) {
+    List<Detection> detections = [];
 
-    // YOLOv5 output format: [25200, 85]
-    // Ogni riga contiene: [x_center, y_center, width, height, objectness, ...80 class probabilities]
-    
-    for (int i = 0; i < 25200; i++) {
-      final prediction = yoloOutput[i];
+    try {
+      // Estrai i 4 output del modello
+      // Output format:
+      // - locations: [1, 25, 4] coordinate [ymin, xmin, ymax, xmax] normalizzate
+      // - classes: [1, 25] ID delle classi rilevate
+      // - scores: [1, 25] punteggi di confidenza [0,1]
+      // - count: [1] numero di detection valide (max 25)
       
-      // Estrai objectness score (confidenza che ci sia un oggetto)
-      final double objectness = prediction[4].toDouble();
+      final locations = outputData[0][0]; // [25, 4]
+      final classes = outputData[1][0];   // [25]
+      final scores = outputData[2][0];    // [25]
+      final numDetections = outputData[3][0].toInt();
       
-      // Filtra detection con objectness troppo basso
-      if (objectness < confidenceThreshold) continue;
+      // Limita alle detection effettivamente valide (massimo 25)
+      final validDetections = min(numDetections, 25);
+      
+      for (int i = 0; i < validDetections; i++) {
+        final double score = scores[i].toDouble();
+        
+        // Filtra detection con confidenza troppo bassa
+        if (score < confidenceThreshold) continue;
 
-      // Trova la classe con probabilità massima
-      double maxClassProbability = 0.0;
-      int predictedClassId = -1;
-      
-      for (int classIndex = 0; classIndex < 80; classIndex++) {
-        final classProbability = prediction[5 + classIndex].toDouble();
-        if (classProbability > maxClassProbability) {
-          maxClassProbability = classProbability;
-          predictedClassId = classIndex;
+        final int classId = classes[i].toInt();
+        
+        // Filtra solo le classi che rappresentano pericoli
+        if (!_dangerClassIds.contains(classId)) continue;
+
+        // Ottieni il nome della classe dalla lista di label
+        final String className = classId < _labels.length 
+            ? _labels[classId] 
+            : 'unknown';
+
+        // Estrai coordinate bounding box
+        // Formato: [ymin, xmin, ymax, xmax] già normalizzate in range [0,1]
+        final double ymin = locations[i][0].toDouble();
+        final double xmin = locations[i][1].toDouble();
+        final double ymax = locations[i][2].toDouble();
+        final double xmax = locations[i][3].toDouble();
+
+        // Verifica validità delle coordinate
+        if (ymin < 0 || xmin < 0 || ymax > 1 || xmax > 1) {
+          debugPrint('   ⚠️ Coordinate invalide: [$ymin, $xmin, $ymax, $xmax]');
+          continue;
         }
+
+        if (ymax <= ymin || xmax <= xmin) {
+          debugPrint('   ⚠️ Box invalida: dimensioni negative');
+          continue;
+        }
+
+        // Converti in formato [x1, y1, x2, y2] per compatibilità con painter
+        detections.add(Detection(
+          classId: classId,
+          className: className,
+          confidence: score,
+          boundingBox: [xmin, ymin, xmax, ymax],
+        ));
       }
-
-      // Calcola confidenza finale: objectness * class_probability
-      final double finalConfidence = objectness * maxClassProbability;
-      
-      // Filtra solo le classi di pericolo
-      if (!_dangerClassIds.contains(predictedClassId)) continue;
-      
-      // Filtra detection con confidenza finale troppo bassa
-      if (finalConfidence < confidenceThreshold) continue;
-
-      // Estrai e normalizza le coordinate della bounding box
-      // YOLOv5 restituisce coordinate relative all'immagine 640x640
-      final double xCenter = prediction[0].toDouble() / inputImageSize;
-      final double yCenter = prediction[1].toDouble() / inputImageSize;
-      final double width = prediction[2].toDouble() / inputImageSize;
-      final double height = prediction[3].toDouble() / inputImageSize;
-
-      // Converti da formato [x_center, y_center, w, h] a [x1, y1, x2, y2]
-      final double x1 = (xCenter - width / 2).clamp(0.0, 1.0);
-      final double y1 = (yCenter - height / 2).clamp(0.0, 1.0);
-      final double x2 = (xCenter + width / 2).clamp(0.0, 1.0);
-      final double y2 = (yCenter + height / 2).clamp(0.0, 1.0);
-
-      // Verifica validità della bounding box
-      if (x2 <= x1 || y2 <= y1) continue;
-
-      // Ottieni il nome della classe
-      final String className = predictedClassId < _labels.length
-          ? _labels[predictedClassId]
-          : 'unknown';
-
-      candidateDetections.add(Detection(
-        classId: predictedClassId,
-        className: className,
-        confidence: finalConfidence,
-        boundingBox: [x1, y1, x2, y2],
-      ));
+    } catch (e) {
+      debugPrint('❌ Errore post-processing: $e');
     }
 
-    // Applica Non-Maximum Suppression per rimuovere detection duplicate
-    return _applyNonMaximumSuppression(candidateDetections);
-  }
-
-  /// Applica Non-Maximum Suppression (NMS) per rimuovere detection sovrapposte
-  /// Mantiene solo le detection con confidenza massima per ogni oggetto
-  List<Detection> _applyNonMaximumSuppression(List<Detection> detections) {
-    // Ordina le detection per confidenza decrescente
-    detections.sort((a, b) => b.confidence.compareTo(a.confidence));
-
-    List<Detection> finalDetections = [];
-
-    while (detections.isNotEmpty) {
-      // Prendi la detection con confidenza massima
-      final bestDetection = detections.first;
-      finalDetections.add(bestDetection);
-      detections.removeAt(0);
-
-      // Rimuovi tutte le detection che si sovrappongono troppo con questa
-      detections.removeWhere((detection) {
-        final iou = _calculateIntersectionOverUnion(
-          bestDetection.boundingBox,
-          detection.boundingBox
-        );
-        return iou > iouThreshold;
-      });
-    }
-
-    return finalDetections;
-  }
-
-  /// Calcola l'Intersection over Union (IoU) tra due bounding box
-  /// IoU = Area intersezione / Area unione
-  /// Valore tra 0 (nessuna sovrapposizione) e 1 (sovrapposizione completa)
-  double _calculateIntersectionOverUnion(
-    List<double> box1,
-    List<double> box2
-  ) {
-    // Calcola coordinate dell'area di intersezione
-    final double intersectionX1 = max(box1[0], box2[0]);
-    final double intersectionY1 = max(box1[1], box2[1]);
-    final double intersectionX2 = min(box1[2], box2[2]);
-    final double intersectionY2 = min(box1[3], box2[3]);
-
-    // Calcola area di intersezione
-    final double intersectionArea = max(0, intersectionX2 - intersectionX1) *
-                                    max(0, intersectionY2 - intersectionY1);
-
-    // Calcola aree delle singole box
-    final double box1Area = (box1[2] - box1[0]) * (box1[3] - box1[1]);
-    final double box2Area = (box2[2] - box2[0]) * (box2[3] - box2[1]);
-
-    // Calcola area di unione
-    final double unionArea = box1Area + box2Area - intersectionArea;
-
-    // Ritorna IoU
-    return intersectionArea / unionArea;
+    return detections;
   }
 
   /// Genera e pronuncia un alert vocale per i pericoli rilevati
@@ -677,7 +634,7 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
         child: Text(
           'FPS: ${_currentFps.toStringAsFixed(1)}',
           style: TextStyle(
-            color: _currentFps > 20 ? Colors.green : Colors.orange,
+            color: _currentFps > 15 ? Colors.green : Colors.orange,
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
@@ -710,7 +667,7 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
             ),
             const SizedBox(width: 6),
             Text(
-              _isModelLoaded ? 'YOLO ATTIVO' : 'ERRORE',
+              _isModelLoaded ? 'MODEL ATTIVO' : 'ERRORE',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
@@ -752,7 +709,7 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
   }
 }
 
-/// Classe che rappresenta una detection di YOLO
+/// Classe che rappresenta una detection
 class Detection {
   final int classId;
   final String className;
