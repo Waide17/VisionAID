@@ -5,7 +5,7 @@ require_once __DIR__ . '/../config/database.php';
 function loginUser($email, $password) {
     global $pdo;
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
+    $stmt = $pdo->prepare("SELECT * FROM admin_users WHERE email = :email LIMIT 1");
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch();
 
