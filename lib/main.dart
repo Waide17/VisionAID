@@ -217,7 +217,7 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
       final processingStartTime = DateTime.now();
 
       // STEP 1: Preprocessa l'immagine (ridimensiona e normalizza)
-      final inputTensor = _preprocessImage(cameraImage);
+      final Uint8List inputTensor = _preprocessImage(cameraImage);
 
       // STEP 2: Prepara i tensor di output
       // EfficientDet ha 4 output separati:
@@ -290,7 +290,7 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
 
   /// Preprocessa l'immagine dalla camera per l'input del modello
   /// Converte da YUV420 a RGB, ridimensiona e normalizza
-  Float32List _preprocessImage(CameraImage cameraImage) {
+  Uint8List _preprocessImage(CameraImage cameraImage) {
     // STEP 1: Converti da YUV420 (formato camera) a RGB
     final img.Image rgbImage = _convertYUV420ToRGB(cameraImage);
 
@@ -302,23 +302,21 @@ class _VisionAidHomePageState extends State<VisionAidHomePage> {
       interpolation: img.Interpolation.linear,
     );
 
-    // STEP 3: Normalizza i pixel da range [0, 255] a [0, 1]
-    // e converti in Float32Array per TFLite
-    final Float32List normalizedPixels = Float32List(
-      inputImageSize * inputImageSize * 3
-    );
+    // STEP 3: Converti in Uint8List (valori 0-255, NON normalizzati)
+    // EfficientDet richiede uint8, non float32
+    final Uint8List pixels = Uint8List(inputImageSize * inputImageSize * 3);
     
     int pixelIndex = 0;
     for (int y = 0; y < inputImageSize; y++) {
       for (int x = 0; x < inputImageSize; x++) {
         final pixel = resizedImage.getPixel(x, y);
-        normalizedPixels[pixelIndex++] = pixel.r / 255.0;
-        normalizedPixels[pixelIndex++] = pixel.g / 255.0;
-        normalizedPixels[pixelIndex++] = pixel.b / 255.0;
+        pixels[pixelIndex++] = pixel.r.toInt();
+        pixels[pixelIndex++] = pixel.g.toInt();
+        pixels[pixelIndex++] = pixel.b.toInt();
       }
     }
 
-    return normalizedPixels;
+    return pixels;
   }
 
   /// Converte un'immagine da formato YUV420 a RGB
