@@ -1,4 +1,10 @@
 plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.chaquo.python'  // ← AGGIUNGI QUESTA RIGA
+}
+
+plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -6,45 +12,44 @@ plugins {
 }
 
 android {
-    namespace = "com.example.test1"
-    compileSdk = flutter.compileSdkVersion
+    namespace 'com.example.test1'
+    compileSdk 34
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = '1.8'
     }
 
     defaultConfig {
-        applicationId = "com.example.test1"
-        minSdk = flutter.minSdkVersion
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-
-        // NDK version corretta
-        ndkVersion = "27.3.13750724"
+        applicationId "com.example.test1"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+        
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a"
+        }
+        
+        python {
+            version "3.8"
+            pip {
+                install "onnxruntime==1.16.0"
+                install "numpy==1.24.3"
+                install "opencv-python-headless==4.8.1.78"
+                install "Pillow==10.0.0"
+            }
+        }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig signingConfigs.debug
         }
-    }
-
-    //aggiungo da portatile
-    dependencies {
-        implementation("androidx.concurrent:concurrent-futures:1.1.0")
-    }
-
-    //per eseguire veloce --AGGIUNTO
-    lint {
-        checkReleaseBuilds = false
-        abortOnError = false
     }
 }
 
@@ -52,6 +57,9 @@ flutter {
     source = "../.."
 }
 
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
 
 allprojects {
     repositories {
