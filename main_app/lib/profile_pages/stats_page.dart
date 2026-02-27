@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:main_app/pages/stats_box.dart';
+import 'package:main_app/profile_pages/stats_box.dart';
 import 'package:provider/provider.dart';
 import 'package:main_app/pages/accessibility_provider.dart';
 
@@ -55,3 +55,5 @@ class StatsPage extends StatelessWidget {
     );
   }
 }
+
+
