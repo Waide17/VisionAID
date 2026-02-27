@@ -165,6 +165,6 @@ class AccessibilityProvider extends ChangeNotifier {
     await _flutterTts.setLanguage('it-IT');
     await _flutterTts.setSpeechRate(0.8);
     await _flutterTts.setVolume(1.0);
-    await _flutterTts.setPitch(1.0);
+    await _flutterTts.setPitch(4.37);
   }
 }

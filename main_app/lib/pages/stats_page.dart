@@ -33,7 +33,7 @@ class StatsPage extends StatelessWidget {
               icon: Icons.timer,
               onTap: () {
                 accessibilityProvider.triggerHapticFeedback();
-                accessibilityProvider.speak('Tempo di utilizzo totale: ${StatBox.value} minuti');
+                accessibilityProvider.speak('Tempo di utilizzo totale: minuti');
               },
             ),
 
