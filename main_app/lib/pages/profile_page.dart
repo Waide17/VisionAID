@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:main_app/pages/accessibility_provider.dart';
 import 'package:main_app/profile_pages/stats_page.dart';
+import 'package:main_app/profile_pages/news.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -35,18 +36,6 @@ class ProfilePage extends StatelessWidget {
           _buildMenuItem(
             context,
             icon: Icon(
-              Icons.bar_chart,
-              color: accessibilityProvider.highContrast ? Colors.white : Colors.blue,
-            ),
-            title: 'Statistiche',
-            onTap: () {
-              accessibilityProvider.triggerHapticFeedback();
-              accessibilityProvider.speak('Statistiche');
-            },
-          ),
-          _buildMenuItem(
-            context,
-            icon: Icon(
               Icons.menu_book,
               color: accessibilityProvider.highContrast ? Colors.white : Colors.blue,
             ),
@@ -73,19 +62,6 @@ class ProfilePage extends StatelessWidget {
           _buildMenuItem(
             context,
             icon: Icon(
-              Icons.feedback,
-              color: accessibilityProvider.highContrast ? Colors.white : Colors.blue,
-            ),
-            title: 'Feedback',
-            onTap: () {
-              accessibilityProvider.triggerHapticFeedback();
-              accessibilityProvider.speak('Feedback');
-              // TODO: Naviga alla pagina feedback
-            },
-          ),
-          _buildMenuItem(
-            context,
-            icon: Icon(
               Icons.new_releases,
               color: accessibilityProvider.highContrast ? Colors.white : Colors.blue,
             ),
@@ -93,7 +69,12 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               accessibilityProvider.triggerHapticFeedback();
               accessibilityProvider.speak('Novità');
-              // TODO: Naviga alla pagina novità
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NewsScreen()),
+              );
+
             },
           ),
           _buildMenuItem(
