@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:main_app/pages/accessibility_provider.dart';
 import 'package:main_app/profile_pages/stats_page.dart';
 import 'package:main_app/profile_pages/news.dart';
+import 'package:main_app/profile_pages/support.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -56,7 +57,9 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               accessibilityProvider.triggerHapticFeedback();
               accessibilityProvider.speak('Supporto');
-              // TODO: Naviga alla pagina supporto
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const Support()));
             },
           ),
           _buildMenuItem(
