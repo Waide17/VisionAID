@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:main_app/pages/accessibility_provider.dart';
 import 'package:main_app/profile_pages/stats_page.dart';
 import 'package:main_app/profile_pages/news.dart';
+import 'package:main_app/profile_pages/information.dart';
 import 'package:main_app/profile_pages/support.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -90,7 +91,10 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               accessibilityProvider.triggerHapticFeedback();
               accessibilityProvider.speak('Informazioni');
-              // TODO: Naviga alla pagina informazioni
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const InformazioniScreen()),
+              );
             },
           ),
         ],
