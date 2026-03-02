@@ -4,6 +4,7 @@ import 'package:main_app/pages/accessibility_provider.dart';
 import 'package:main_app/profile_pages/stats_page.dart';
 import 'package:main_app/profile_pages/news.dart';
 import 'package:main_app/profile_pages/information.dart';
+import 'package:main_app/profile_pages/guide.dart';
 import 'package:main_app/profile_pages/support.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -45,7 +46,10 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               accessibilityProvider.triggerHapticFeedback();
               accessibilityProvider.speak('Guida');
-              // TODO: Naviga alla pagina guida
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const GuidaScreen())
+              );
             },
           ),
           _buildMenuItem(
