@@ -6,6 +6,7 @@ import 'package:main_app/profile_pages/news.dart';
 import 'package:main_app/profile_pages/information.dart';
 import 'package:main_app/profile_pages/guide.dart';
 import 'package:main_app/profile_pages/support.dart';
+import 'package:main_app/profile_pages/general_sett.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -33,7 +34,10 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               accessibilityProvider.triggerHapticFeedback();
               accessibilityProvider.speak('Impostazioni generali');
-              // TODO: Naviga alla pagina impostazioni generali
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ImpostazioniGeneraliScreen())
+              );
             },
           ),
           _buildMenuItem(

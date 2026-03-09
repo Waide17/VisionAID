@@ -247,12 +247,6 @@ class _SupportState extends State<Support> {
               ),
               const SizedBox(height: 16),
 
-              // Screenshot
-              _buildLabel('Screenshot (opzionale)', hc),
-              const SizedBox(height: 6),
-              _buildScreenshotPicker(hc, acc),
-              const SizedBox(height: 32),
-
               // Bottone invio
               SizedBox(
                 width: double.infinity,
@@ -381,79 +375,6 @@ class _SupportState extends State<Support> {
           .map((c) => DropdownMenuItem(value: c, child: Text(c)))
           .toList(),
       onChanged: (v) => setState(() => _selectedCategory = v),
-    );
-  }
-
-  Widget _buildScreenshotPicker(bool hc, AccessibilityProvider acc) {
-    if (_screenshot != null) {
-      return Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.file(
-              _screenshot!,
-              height: 160,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned(
-            top: 6,
-            right: 6,
-            child: GestureDetector(
-              onTap: () {
-                acc.triggerHapticFeedback();
-                _removeScreenshot();
-              },
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                padding: const EdgeInsets.all(4),
-                child: const Icon(Icons.close, color: Colors.white, size: 18),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    return GestureDetector(
-      onTap: () {
-        acc.triggerHapticFeedback();
-        _pickScreenshot();
-      },
-      child: Container(
-        height: 100,
-        decoration: BoxDecoration(
-          color: hc ? Colors.grey[900] : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: hc ? Colors.white30 : Colors.grey[300]!,
-            style: BorderStyle.solid,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.add_photo_alternate_outlined,
-                size: 32,
-                color: hc ? Colors.white54 : Colors.blue[300],
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Tocca per aggiungere uno screenshot',
-                style: TextStyle(
-                  color: hc ? Colors.white38 : Colors.black38,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
