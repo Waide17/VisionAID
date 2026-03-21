@@ -382,11 +382,6 @@ class _InfoRow extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (copyable) ...[
-                    const SizedBox(width: 6),
-                    Icon(Icons.copy_rounded, size: 13,
-                        color: hc ? Colors.white38 : Colors.black26),
-                  ],
                 ],
               ),
             ),

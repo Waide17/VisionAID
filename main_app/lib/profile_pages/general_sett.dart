@@ -8,17 +8,17 @@ class ImpostazioniGeneraliScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ap = Provider.of<AccessibilityProvider>(context);
-
+    final hc  = ap.highContrast;
     return Scaffold(
+      backgroundColor: ap.highContrast ? Colors.black : Colors.grey[100],
       appBar: AppBar(
         title: Semantics(
           header: true,
-          child: const Text('Impostazioni generali'),
+          child: const Text('Impostazioni generali', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
-        backgroundColor: ap.highContrast ? Colors.black : null,
-        foregroundColor: ap.highContrast ? Colors.white : null,
-      ),
-      backgroundColor: ap.highContrast ? Colors.black : Colors.grey[100],
+        backgroundColor: hc ? Colors.black : Colors.blue,
+        foregroundColor: Colors.white,
+      ),      
       body: ListView(
         children: [
           // ── Accessibilità ──────────────────────────────────────
